@@ -176,23 +176,38 @@ document.querySelectorAll("form[data-ajax]").forEach((form) => {
 });
 
 // Published reviews (approve submitted reviews at /admin)
-const reviewList = document.querySelector("#review-list");
-if (reviewList) {
-  const escape = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const stars = (n) => `<span class="stars" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`;
-  const month = (iso) => new Date(iso).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
-  const person = (r, detail = r.trip) => `<span class="avatar" aria-hidden="true">${escape(r.name.trim()[0] || "?").toUpperCase()}</span>
-    <div><strong>${escape(r.name)}</strong>${detail ? escape(detail) : ""}</div>`;
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const stars = (n) => `<span class="stars" aria-label="${n} out of 5 stars">${"★".repeat(n)}<span class="off">${"★".repeat(5 - n)}</span></span>`;
+const month = (iso) => new Date(iso).toLocaleDateString("en-GB", { month: "short", year: "numeric" });
+const person = (r, detail = r.trip) => `<span class="avatar" aria-hidden="true">${escapeHtml(r.name.trim()[0] || "?").toUpperCase()}</span>
+    <div><strong>${escapeHtml(r.name)}</strong>${detail ? escapeHtml(detail) : ""}</div>`;
+const reviewCard = (r) => `<article class="review">
+    <div class="review-top">${stars(r.rating)}<time datetime="${escapeHtml(r.createdAt)}">${month(r.createdAt)}</time></div>
+    <p>${escapeHtml(r.review)}</p>
+    <footer>${person(r)}</footer>
+  </article>`;
 
+const reviewList = document.querySelector("#review-list");
+const homeReviews = document.querySelector("#home-reviews");
+if (reviewList || homeReviews) {
   fetch("/api/reviews")
     .then((res) => (res.ok ? res.json() : []))
     .then((reviews) => {
       if (!Array.isArray(reviews) || reviews.length === 0) return;
       reviews.forEach((r) => (r.rating = Math.max(1, Math.min(5, Number(r.rating) || 5))));
-
       const average = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+      const summaryText = `<b>${average.toFixed(1)}</b>${stars(Math.round(average))}<span>from ${reviews.length} review${reviews.length === 1 ? "" : "s"}</span>`;
+
+      // Home: the three newest reviews, shown only once there are some
+      if (homeReviews) {
+        homeReviews.querySelector(".rating-summary").innerHTML = summaryText;
+        homeReviews.querySelector(".home-review-grid").innerHTML = reviews.slice(0, 3).map(reviewCard).join("");
+        homeReviews.hidden = false;
+      }
+      if (!reviewList) return;
+
       const summary = document.querySelector("#rating-summary");
-      summary.innerHTML = `<b>${average.toFixed(1)}</b>${stars(Math.round(average))}<span>from ${reviews.length} review${reviews.length === 1 ? "" : "s"}</span>`;
+      summary.innerHTML = summaryText;
       summary.hidden = false;
 
       // Feature the newest five-star review with something to say; the rest go in the grid
@@ -203,21 +218,10 @@ if (reviewList) {
           <span class="quote-mark" aria-hidden="true">“</span>
           <blockquote>
             ${stars(featured.rating)}
-            <p>${escape(featured.review)}</p>
+            <p>${escapeHtml(featured.review)}</p>
             <footer>${person(featured, featured.trip || month(featured.createdAt))}</footer>
           </blockquote>
-        </figure>` +
-        (rest.length
-          ? `<div class="review-grid">${rest
-              .map(
-                (r) => `<article class="review">
-                  <div class="review-top">${stars(r.rating)}<time datetime="${escape(r.createdAt)}">${month(r.createdAt)}</time></div>
-                  <p>${escape(r.review)}</p>
-                  <footer>${person(r)}</footer>
-                </article>`
-              )
-              .join("")}</div>`
-          : "");
+        </figure>` + (rest.length ? `<div class="review-grid">${rest.map(reviewCard).join("")}</div>` : "");
     })
     .catch(() => {});
 }

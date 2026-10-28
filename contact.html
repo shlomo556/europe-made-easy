@@ -39,8 +39,8 @@
     <section class="page-hero page-hero-tall" style="--hero-img:url('/images/paris-eiffel-night.jpg');--hero-img-sm:url('/images/paris-eiffel-night-1200.jpg'); background-position: 70% 40%">
       <div class="wrap">
         <p class="kicker">Contact Us</p>
-        <h1>Ready to explore Europe?</h1>
-        <p>Get in touch and let us take care of your trip.</p>
+        <h1>Let's plan your trip.</h1>
+        <p>Tell us where and when. We'll take care of the rest.</p>
       </div>
     </section>
 
@@ -63,6 +63,10 @@
             <label class="field"><span>Name</span><input name="name" required autocomplete="name"></label>
             <label class="field"><span>Email</span><input name="email" type="email" required autocomplete="email"></label>
           </div>
+          <div class="field-row">
+            <label class="field"><span>WhatsApp / phone</span><input name="phone" type="tel" autocomplete="tel" placeholder="+1 555 123 4567"></label>
+            <label class="field"><span>Number of travelers</span><input name="travelers" type="number" min="1" max="99" inputmode="numeric" placeholder="2"></label>
+          </div>
           <label class="field"><span>Destination</span>
             <select id="destination" name="destination" required>
               <option value="">Choose a city…</option>
@@ -79,7 +83,7 @@
             <label class="field"><span>Travel dates — from</span><input name="travel_from" type="date"></label>
             <label class="field"><span>Travel dates — to</span><input name="travel_to" type="date"></label>
           </div>
-          <label class="field"><span>Message</span><textarea name="message" required placeholder="Number of travelers, stopover times, what you'd like to see…"></textarea></label>
+          <label class="field"><span>Message</span><textarea name="message" required placeholder="Flight times, kosher needs, what you'd like to see…"></textarea></label>
           <button class="btn btn-gold btn-lg" type="submit">Plan your trip</button>
           <p class="form-status" role="status"></p>
         </form>
