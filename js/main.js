@@ -85,8 +85,17 @@ if (destination) {
 // Review dialog
 const sheet = document.querySelector("#reviewSheet");
 if (sheet) {
-  document.querySelectorAll("[data-open-review]").forEach((b) => b.addEventListener("click", () => sheet.showModal()));
-  sheet.querySelector(".x").addEventListener("click", () => sheet.close());
+  const sheetForm = sheet.querySelector("form");
+  const sheetDone = sheet.querySelector(".sheet-done");
+  document.querySelectorAll("[data-open-review]").forEach((b) =>
+    b.addEventListener("click", () => {
+      // Back to a fresh form if the last review was already sent
+      sheetForm.hidden = false;
+      sheetDone.hidden = true;
+      sheet.showModal();
+    })
+  );
+  sheet.querySelectorAll(".x, [data-close-sheet]").forEach((b) => b.addEventListener("click", () => sheet.close()));
   sheet.addEventListener("click", (e) => {
     if (e.target === sheet) sheet.close();
   });
@@ -122,9 +131,17 @@ document.querySelectorAll("form[data-ajax]").forEach((form) => {
       if (!res.ok || json.success === "false" || json.success === false) throw new Error(json.message || "Send failed");
       // Saved to our own API (reviews): also email a heads-up with the approval link
       if (form.dataset.endpoint) send(FORM_ENDPOINT, { ...data, approve_at: `${location.origin}/admin` }).catch(() => {});
-      status.textContent = form.dataset.success;
-      status.className = "form-status ok";
       form.reset();
+      const done = form.parentElement.querySelector(".sheet-done");
+      if (done) {
+        // Review dialog: swap the form for a thank-you screen
+        form.hidden = true;
+        done.hidden = false;
+        done.querySelector("button").focus();
+      } else {
+        status.textContent = form.dataset.success;
+        status.className = "form-status ok";
+      }
     } catch (err) {
       status.innerHTML =
         'Sorry, something went wrong. Please email us at <a href="mailto:info@EuropeMadeEasy.org">info@EuropeMadeEasy.org</a> or message us on <a href="https://wa.me/32456741479" target="_blank" rel="noopener">WhatsApp</a>.';

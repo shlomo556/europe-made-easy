@@ -220,13 +220,20 @@ p { margin: 0 0 1em; }
 .sheet[open] { animation: rise .45s var(--ease); }
 @keyframes rise { from { opacity: 0; transform: translateY(24px) scale(.98); } }
 .sheet .form { padding: clamp(22px, 4vw, 34px); }
+.sheet [hidden] { display: none; }
+.sheet-done { text-align: center; padding: clamp(40px, 7vw, 64px) clamp(22px, 4vw, 34px); }
+.sheet-done .stars { font-size: 26px; gap: 6px; margin-bottom: 18px; }
+.sheet-done h3 { font-size: 2.2rem; margin-bottom: 12px; }
+.sheet-done p { color: var(--muted); max-width: 38ch; margin: 0 auto 28px; }
 .sheet-head { display: flex; justify-content: space-between; align-items: center; }
 .sheet-head h3 { font-size: 1.9rem; }
 .x { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--mist); cursor: pointer; display: grid; place-items: center; transition: transform .3s var(--ease), background-color .2s; }
 .x:hover { transform: rotate(90deg); background: var(--line); }
 .x svg { width: 18px; height: 18px; fill: none; stroke: var(--navy); stroke-width: 2; stroke-linecap: round; }
 .star-input { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: 2px; }
-.star-input input { position: absolute; opacity: 0; width: 0; height: 0; }
+.star-input { position: relative; }
+/* .field .star-input beats the generic .field input sizing, which made the hidden radios cover the stars */
+.field .star-input input { position: absolute; left: 0; top: 0; opacity: 0; width: 1px; height: 1px; padding: 0; border: 0; margin: 0; pointer-events: none; }
 .star-input label { font-size: 34px; line-height: 1; color: var(--line); cursor: pointer; padding: 0 2px; transition: transform .2s var(--ease), color .15s; }
 .star-input label:hover { transform: scale(1.14); }
 .star-input input:checked ~ label, .star-input label:hover, .star-input label:hover ~ label { color: var(--gold); }
