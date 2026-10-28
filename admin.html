@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reviews admin | Europe Made Easy</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#14233b">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    body { background: var(--mist); }
+    [hidden] { display: none !important; }
+    .admin { width: min(860px, 100% - 32px); margin: 0 auto; padding: 56px 0 80px; }
+    .admin-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 36px; }
+    .admin-head h1 { font-size: clamp(2.2rem, 5vw, 3rem); }
+    .admin-head a { color: var(--muted); font-size: 15px; }
+    .login { max-width: 420px; padding: 32px; }
+    .admin h2 { font-size: 1.8rem; margin: 44px 0 16px; }
+    .admin h2 small { font: 500 15px var(--sans); color: var(--muted); margin-left: 8px; }
+    .item { background: var(--white); border-radius: var(--r-md); padding: 22px 24px; margin-bottom: 14px; box-shadow: 0 1px 0 var(--line); }
+    .item-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; font-size: 14px; color: var(--muted); }
+    .item-meta strong { color: var(--navy); font-size: 16px; }
+    .item p { white-space: pre-line; margin: 12px 0 18px; }
+    .item-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .item-actions .btn { padding: 11px 18px; font-size: 14px; }
+    .btn-danger { --bg: transparent; --fg: #b3412f; box-shadow: inset 0 0 0 1.5px #e3b5ad; }
+    .btn-danger:hover { --bg: #b3412f; --fg: #fff; }
+    .none { color: var(--muted); margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="admin">
+    <div class="admin-head">
+      <h1>Reviews</h1>
+      <a href="reviews.html">View the Reviews page →</a>
+    </div>
+
+    <form class="card form login" id="login">
+      <label class="field"><span>Admin password</span><input type="password" name="password" required autocomplete="current-password"></label>
+      <button class="btn btn-gold" type="submit">Sign in</button>
+      <p class="form-status" role="status"></p>
+    </form>
+
+    <div id="lists" hidden>
+      <h2>Waiting for approval <small id="pending-count"></small></h2>
+      <div id="pending"></div>
+      <h2>Published <small id="published-count"></small></h2>
+      <div id="published"></div>
+    </div>
+  </main>
+
+  <script>
+    const login = document.querySelector("#login");
+    const status = login.querySelector(".form-status");
+    const lists = document.querySelector("#lists");
+    let password = sessionStorage.getItem("admin-password") || "";
+
+    const escape = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+    async function call(method, body) {
+      const res = await fetch("/api/admin", {
+        method,
+        headers: { Authorization: `Bearer ${password}`, "Content-Type": "application/json" },
+        body: body && JSON.stringify(body),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw Object.assign(new Error(data.error || "Something went wrong"), { status: res.status });
+      return data;
+    }
+
+    function render(reviews) {
+      const item = (r) => `<article class="item" data-id="${escape(r.id)}">
+        <div class="item-meta">
+          <strong>${escape(r.name)}</strong>
+          <span class="stars" aria-label="${r.rating} out of 5 stars">${"★".repeat(r.rating)}<span class="off">${"★".repeat(5 - r.rating)}</span></span>
+          ${r.trip ? `<span>${escape(r.trip)}</span>` : ""}
+          <span>${new Date(r.createdAt).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" })}</span>
+        </div>
+        <p>${escape(r.review)}</p>
+        <div class="item-actions">
+          ${r.status === "published"
+            ? `<button class="btn btn-line" data-action="unpublish">Unpublish</button>`
+            : `<button class="btn btn-ink" data-action="publish">Publish</button>`}
+          <button class="btn btn-danger" data-action="delete">Delete</button>
+        </div>
+      </article>`;
+      for (const key of ["pending", "published"]) {
+        const group = reviews.filter((r) => r.status === key);
+        document.querySelector(`#${key}`).innerHTML = group.length ? group.map(item).join("") : `<p class="none">Nothing here.</p>`;
+        document.querySelector(`#${key}-count`).textContent = group.length;
+      }
+      login.hidden = true;
+      lists.hidden = false;
+    }
+
+    async function load() {
+      try {
+        render(await call("GET"));
+        sessionStorage.setItem("admin-password", password);
+      } catch (err) {
+        sessionStorage.removeItem("admin-password");
+        login.hidden = false;
+        lists.hidden = true;
+        status.textContent = err.message;
+        status.className = "form-status err";
+      }
+    }
+
+    login.addEventListener("submit", (e) => {
+      e.preventDefault();
+      password = login.password.value;
+      status.textContent = "Signing in…";
+      status.className = "form-status";
+      load();
+    });
+
+    lists.addEventListener("click", async (e) => {
+      const button = e.target.closest("[data-action]");
+      if (!button) return;
+      const { action } = button.dataset;
+      if (action === "delete" && !confirm("Delete this review permanently?")) return;
+      button.disabled = true;
+      try {
+        render(await call("POST", { id: button.closest(".item").dataset.id, action }));
+      } catch (err) {
+        alert(err.message);
+        button.disabled = false;
+      }
+    });
+
+    if (password) load();
+  </script>
+</body>
+</html>

@@ -7,7 +7,7 @@
   <meta name="description" content="Read what our customers say about their Europe Made Easy trips, and share your own experience.">
   <meta property="og:title" content="Reviews | Europe Made Easy">
   <meta property="og:description" content="Read what our customers say about their Europe Made Easy trips, and share your own experience.">
-  <meta property="og:image" content="images/venice.jpg">
+  <meta property="og:image" content="images/paris-dusk.jpg">
   <meta name="theme-color" content="#14233b">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,35 +31,34 @@
   </header>
 
   <main>
-    <section class="page-hero" style="background-image:url('images/london-2.jpg')">
+    <section class="page-hero page-hero-tall" style="background-image:url('images/paris-dusk.jpg')">
       <div class="wrap">
         <p class="kicker">Reviews</p>
         <h1>What our customers say</h1>
         <p>Experiences from travelers we've had the pleasure of hosting.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold btn-lg" type="button" data-open-review>Write a review</button>
+          <a class="btn btn-glass btn-lg" href="contact.html">Plan your trip</a>
+        </div>
+        <p class="rating-summary" id="rating-summary" hidden></p>
       </div>
     </section>
 
     <section class="section">
       <div class="wrap">
-        <div class="section-head section-head-row">
-          <div>
-            <h2>Reviews</h2>
-            <p>Traveled with us? We'd love to hear about your trip.</p>
-          </div>
-          <button class="btn btn-ink" type="button" data-open-review>Write a review</button>
-        </div>
         <div id="review-list">
           <div class="empty">
-            <h3>Be the first to share your trip</h3>
-            <p>Traveled with Europe Made Easy? Tell others what it was like.</p>
-            <button class="btn btn-gold" type="button" data-open-review>Write a review</button>
+            <span class="stars" aria-hidden="true">★★★★★</span>
+            <h2>Be the first to share your trip</h2>
+            <p>Traveled with Europe Made Easy? Tell others what it was like, from the meals to the sightseeing.</p>
+            <button class="btn btn-gold btn-lg" type="button" data-open-review>Write a review</button>
           </div>
         </div>
       </div>
     </section>
 
     <dialog class="sheet" id="reviewSheet" aria-labelledby="sheetTitle">
-      <form class="form" data-ajax data-success="Thank you! Your review has been received.">
+      <form class="form" data-ajax data-endpoint="/api/reviews" data-success="Thank you! Your review has been received.">
         <input type="hidden" name="_subject" value="New review — Europe Made Easy">
         <input type="hidden" name="_template" value="table">
         <input type="text" name="_honey" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
