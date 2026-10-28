@@ -7,13 +7,33 @@
   <meta name="description" content="Fully arranged, kosher-friendly sightseeing in Rome, Venice, Amsterdam, Paris and London — perfect for stopovers, layovers and short vacations.">
   <meta property="og:title" content="Europe Made Easy — Discover Europe Without the Hassle">
   <meta property="og:description" content="Fully arranged, kosher-friendly sightseeing in Rome, Venice, Amsterdam, Paris and London — perfect for stopovers, layovers and short vacations.">
-  <meta property="og:image" content="images/venice.jpg">
+  <meta property="og:image" content="https://www.europemadeeasy.org/images/venice-1200.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.europemadeeasy.org/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://www.europemadeeasy.org/">
   <meta name="theme-color" content="#14233b">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Gloock&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TravelAgency",
+    "name": "Europe Made Easy",
+    "url": "https://www.europemadeeasy.org/",
+    "logo": "https://www.europemadeeasy.org/favicon.svg",
+    "image": "https://www.europemadeeasy.org/images/venice-1200.jpg",
+    "description": "Fully arranged, kosher-friendly sightseeing in Rome, Venice, Amsterdam, Paris and London for stopovers, layovers and short vacations.",
+    "email": "info@EuropeMadeEasy.org",
+    "telephone": "+32456741479",
+    "areaServed": ["Rome", "Venice", "Amsterdam", "Paris", "London"],
+    "sameAs": ["https://wa.me/32456741479"]
+  }
+  </script>
   <script src="js/main.js" defer></script>
 </head>
 <body>
@@ -33,11 +53,11 @@
   <main>
     <section class="hero" aria-label="Welcome">
       <div class="hero-media" aria-hidden="true">
-      <img src="images/rome.jpg" alt="" fetchpriority="high">
-      <img data-src="images/venice.jpg" alt="">
-      <img data-src="images/amsterdam.jpg" alt="">
-      <img data-src="images/paris.jpg" alt="">
-      <img data-src="images/london.jpg" alt="">
+      <img class="show" src="images/rome.jpg" srcset="images/rome-1200.jpg 1200w, images/rome.jpg 2000w" sizes="100vw" alt="" fetchpriority="high">
+      <img data-src="images/venice.jpg" data-srcset="images/venice-1200.jpg 1200w, images/venice.jpg 2000w" sizes="100vw" alt="">
+      <img data-src="images/amsterdam.jpg" data-srcset="images/amsterdam-1200.jpg 1200w, images/amsterdam.jpg 2000w" sizes="100vw" alt="">
+      <img data-src="images/paris.jpg" data-srcset="images/paris-1200.jpg 1200w, images/paris.jpg 2000w" sizes="100vw" alt="">
+      <img data-src="images/london.jpg" data-srcset="images/london-1200.jpg 1200w, images/london.jpg 2000w" sizes="100vw" alt="">
       </div>
       <div class="hero-shade" aria-hidden="true"></div>
       <div class="hero-inner">
@@ -55,6 +75,29 @@
     <button class="hero-tab" role="tab" aria-selected="false">Amsterdam<small>Canals and culture</small></button>
     <button class="hero-tab" role="tab" aria-selected="false">Paris<small>The City of Light</small></button>
     <button class="hero-tab" role="tab" aria-selected="false">London<small>Royal landmarks</small></button>
+      </div>
+    </section>
+
+    <section class="film">
+      <div class="wrap film-grid">
+        <div class="film-phone">
+          <video id="film" src="video/europe-made-easy.mp4" poster="video/europe-made-easy-poster.jpg" preload="none" playsinline aria-label="Europe Made Easy: a 42-second film about how your stopover is arranged"></video>
+          <button class="film-play" type="button" aria-label="Play the film with sound"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+        </div>
+        <div class="film-copy">
+          <p class="kicker">Watch · 42 seconds</p>
+          <h2>From the moment you land.</h2>
+          <p class="lead">Here's what a stopover with us looks like.</p>
+          <ol class="steps">
+            <li><b>Picked up at the airport</b><span>A private van is waiting when you land.</span></li>
+            <li><b>Shown the city</b><span>A professional local guide takes you to the top sights.</span></li>
+            <li><b>Kosher meals arranged</b><span>Delicious kosher food, booked ahead.</span></li>
+            <li><b>Staying the night?</b><span>Your hotel is booked and ready.</span></li>
+          </ol>
+          <div class="cta-actions">
+            <a class="btn btn-gold btn-lg" href="contact.html">Plan your trip</a>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -94,23 +137,23 @@
         </div>
         <div class="dest-grid">
           <a class="dest" href="cities.html#rome">
-            <div class="dest-img"><img src="images/rome.jpg" alt="The Colosseum in Rome at dusk" loading="lazy"></div>
+            <div class="dest-img"><img src="images/rome-800.jpg" srcset="images/rome-800.jpg 800w, images/rome-1200.jpg 1200w, images/rome.jpg 2000w" sizes="(max-width: 720px) 68vw, (max-width: 1080px) 34vw, 240px" alt="The Colosseum in Rome at dusk" loading="lazy"></div>
             <div class="dest-body"><small>Italy</small><h3>Rome</h3></div>
           </a>
           <a class="dest" href="cities.html#venice">
-            <div class="dest-img"><img src="images/venice.jpg" alt="The Grand Canal in Venice with the Santa Maria della Salute dome" loading="lazy"></div>
+            <div class="dest-img"><img src="images/venice-800.jpg" srcset="images/venice-800.jpg 800w, images/venice-1200.jpg 1200w, images/venice.jpg 2000w" sizes="(max-width: 720px) 68vw, (max-width: 1080px) 34vw, 240px" alt="The Grand Canal in Venice with the Santa Maria della Salute dome" loading="lazy"></div>
             <div class="dest-body"><small>Italy</small><h3>Venice</h3></div>
           </a>
           <a class="dest" href="cities.html#amsterdam">
-            <div class="dest-img"><img src="images/amsterdam.jpg" alt="Tree-lined canal in Amsterdam" loading="lazy"></div>
+            <div class="dest-img"><img src="images/amsterdam-800.jpg" srcset="images/amsterdam-800.jpg 800w, images/amsterdam-1200.jpg 1200w, images/amsterdam.jpg 2000w" sizes="(max-width: 720px) 68vw, (max-width: 1080px) 34vw, 240px" alt="Tree-lined canal in Amsterdam" loading="lazy"></div>
             <div class="dest-body"><small>Netherlands</small><h3>Amsterdam</h3></div>
           </a>
           <a class="dest" href="cities.html#paris">
-            <div class="dest-img"><img src="images/paris.jpg" alt="The Eiffel Tower over the Seine at sunset" loading="lazy"></div>
+            <div class="dest-img"><img src="images/paris-800.jpg" srcset="images/paris-800.jpg 800w, images/paris-1200.jpg 1200w, images/paris.jpg 2000w" sizes="(max-width: 720px) 68vw, (max-width: 1080px) 34vw, 240px" alt="The Eiffel Tower over the Seine at sunset" loading="lazy"></div>
             <div class="dest-body"><small>France</small><h3>Paris</h3></div>
           </a>
           <a class="dest" href="cities.html#london">
-            <div class="dest-img"><img src="images/london.jpg" alt="Big Ben and Westminster Bridge in London" loading="lazy"></div>
+            <div class="dest-img"><img src="images/london-800.jpg" srcset="images/london-800.jpg 800w, images/london-1200.jpg 1200w, images/london.jpg 2000w" sizes="(max-width: 720px) 68vw, (max-width: 1080px) 34vw, 240px" alt="Big Ben and Westminster Bridge in London" loading="lazy"></div>
             <div class="dest-body"><small>United Kingdom</small><h3>London</h3></div>
           </a>
         </div>

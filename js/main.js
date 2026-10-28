@@ -5,9 +5,15 @@ const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").match
 
 // Header: transparent over the hero photo, solid after scrolling
 const bar = document.querySelector(".bar");
-const setSolid = () => bar.classList.toggle("solid", window.scrollY > 40);
-setSolid();
-window.addEventListener("scroll", setSolid, { passive: true });
+// Floating WhatsApp button waits until the banner (which has its own buttons) is scrolled past
+const waFloat = document.querySelector(".wa-float");
+const banner = document.querySelector(".hero, .page-hero");
+const onScroll = () => {
+  bar.classList.toggle("solid", window.scrollY > 40);
+  if (waFloat) waFloat.classList.toggle("show", !banner || window.scrollY > banner.offsetHeight * 0.6);
+};
+onScroll();
+window.addEventListener("scroll", onScroll, { passive: true });
 
 // Mobile menu
 const burger = document.querySelector(".burger");
@@ -36,13 +42,22 @@ if (hero) {
   let current = 0;
   let timer;
 
-  const show = (i) => {
-    current = (i + slides.length) % slides.length;
-    const img = slides[current];
+  // Slides after the first load on demand (data-srcset / data-src)
+  const load = (img) => {
+    if (img.dataset.srcset) {
+      img.srcset = img.dataset.srcset;
+      img.removeAttribute("data-srcset");
+    }
     if (img.dataset.src) {
       img.src = img.dataset.src;
       img.removeAttribute("data-src");
     }
+  };
+
+  const show = (i) => {
+    current = (i + slides.length) % slides.length;
+    const img = slides[current];
+    load(img);
     slides.forEach((s, j) => s.classList.toggle("show", j === current));
     tabs.forEach((t, j) => {
       t.setAttribute("aria-selected", String(j === current));
@@ -52,11 +67,7 @@ if (hero) {
       t.style.animation = "";
     });
     // warm up the next photo
-    const next = slides[(current + 1) % slides.length];
-    if (next.dataset.src) {
-      next.src = next.dataset.src;
-      next.removeAttribute("data-src");
-    }
+    load(slides[(current + 1) % slides.length]);
   };
   const start = () => {
     clearInterval(timer);
@@ -72,6 +83,17 @@ if (hero) {
   if (reduceMotion) hero.classList.add("paused");
   show(0);
   start();
+}
+
+// Home film: one tap plays it with sound; native controls take over after that
+const film = document.querySelector(".film");
+if (film) {
+  const video = film.querySelector("video");
+  film.querySelector(".film-play").addEventListener("click", () => {
+    video.controls = true;
+    video.play();
+  });
+  video.addEventListener("play", () => film.classList.add("playing"));
 }
 
 // Preselect destination on the contact form (contact.html?city=rome)
